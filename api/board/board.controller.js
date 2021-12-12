@@ -19,7 +19,7 @@ async function getBoards(req, res) {
 
 async function getBoard(req, res) {
     try {
-        console.log('here');
+        // console.log('here');
         const board = await boardService.getById(req.params.boardId)
         res.send(board)
     } catch (err) {
@@ -43,6 +43,7 @@ async function updateBoard(req, res) {
         const board = req.body
         const savedBoard = await boardService.update(board)
         // console.log('savedBoard',savedBoard);
+        // socketService.broadcast({ type: 'board-updated', data: board._id, room: board._id })
         res.send(savedBoard)
     } catch (err) {
         logger.error('Failed to update board', err)
