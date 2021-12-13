@@ -19,7 +19,6 @@ async function getBoards(req, res) {
 
 async function getBoard(req, res) {
     try {
-        // console.log('here');
         const board = await boardService.getById(req.params.boardId)
         res.send(board)
     } catch (err) {

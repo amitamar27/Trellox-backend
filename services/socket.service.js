@@ -67,31 +67,30 @@ function connectSockets(http, session) {
             }
         })
         socket.on('currBoard', boardId => {
-            console.log('boardId sdsds',boardId);
+            console.log('boardId sdsds', boardId);
             if (socket.currBoard === boardId) return;
             if (socket.currBoard) {
-               socket.leave(socket.myTopic)
+                socket.leave(socket.myTopic)
             }
             socket.join(boardId)
-            // logger.debug('Session ID is', socket.handshake.sessionID)
             socket.boardId = boardId
-         })
+        })
 
         socket.on('board update', board => {
-            // console.log('board',board);
+            console.log('socket update');
             // gIo.to(socket.currBoard).emit('board updated', board)
-            socket.broadcast.to(socket.boardId).emit('board update', board)
+            socket.broadcast.to(socket.boardId).emit('board updated', board)
             // emits to all sockets:
             // gIo.emit('chat addMsg', msg)
             // emits only to sockets in the same room
             // gIo.to(socket.topic).emit('chat addMsg', msg)
-         })
+        })
 
         // socket.on('board-updated', savedBoard => {
         //     socket.to(socket.boardId).emit('board-updated', savedBoard)
         // })
 
-      
+
     })
 }
 
@@ -119,15 +118,23 @@ async function emitToUser({
 }
 
 // Send to all sockets BUT not the current socket 
-function broadcast({ type, data, room = null }) {
+function broadcast({
+    type,
+    data,
+    room = null
+}) {
     const store = asyncLocalStorage.getStore()
-    const { sessionId } = store
+    console.log('store', store);
+    const {
+        sessionId
+    } = store
+    console.log('sessionId', sessionId);
     if (!sessionId) return logger.debug('Shoudnt happen, no sessionId in asyncLocalStorage store')
     const excludedSocket = gSocketBySessionIdMap[sessionId]
     if (!excludedSocket) return logger.debug('Shouldnt happen, No socket in map')
     if (room) excludedSocket.broadcast.to(room).emit(type, data)
     else excludedSocket.broadcast.emit(type, data)
- }
+}
 
 // async function broadcast({
 //     type,
