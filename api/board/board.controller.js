@@ -52,8 +52,8 @@ async function updateBoard(req, res) {
 
 async function addBoard(req, res) {
     try {
-        var board = req.body
-        console.log(board);
+        var {board} = req.body
+        // console.log(board);
         board = await boardService.add(board)
         // socketService.broadcast({type: 'board-added', data: board})
         res.send(board)

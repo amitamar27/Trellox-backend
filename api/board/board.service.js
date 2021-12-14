@@ -55,8 +55,10 @@ async function update({board}) {
 
 async function add(board) {
     try {
-        board.createdAt = Date.now()
-        if (board.isStared === undefined) board.isStared = false
+        // board.createdAt = Date.now()
+        // console.log('board service',board);
+        // console.log('board labels',board.labels);
+        // if (board.isStared === undefined) board.isStared = false
         const collection = await dbService.getCollection('boards')
         await collection.insertOne(board)
         return board
