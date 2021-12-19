@@ -4,14 +4,14 @@ const { log } = require('../../middlewares/logger.middleware')
 const { addBoard, getBoards, getBoard, deleteBoard, updateBoard } = require('./board.controller')
 const router = express.Router()
 
-router.get('/',  getBoards)
+router.get('/', getBoards)
 // requireAuth,
 router.get('/:boardId', getBoard)
 // , requireAuth
 
-router.put('/',  updateBoard)
+router.put('/', updateBoard)
 // requireAuth,
-router.post('/',  addBoard)
+router.post('/', requireAuth, addBoard)
 // requireAuth,
 router.delete('/:id',  deleteBoard)
 // requireAuth,

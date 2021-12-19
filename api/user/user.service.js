@@ -6,7 +6,7 @@ const ObjectId = require('mongodb').ObjectId
 module.exports = {
     query,
     getById,
-    getByUsername,
+    getByEmail,
     remove,
     update,
     add
@@ -35,7 +35,7 @@ async function query(filterBy = {}) {
 
 async function getById(userId) {
     try {
-        const collection = await dbService.getCollection('user')
+        const collection = await dbService.getCollection('users')
         const user = await collection.findOne({ '_id': ObjectId(userId) })
         delete user.password
         return user
@@ -44,21 +44,22 @@ async function getById(userId) {
         throw err
     }
 }
-async function getByUsername(username) {
-    console.log('user service get by user name',username);
+async function getByEmail(email) {
+    console.log('user service get by user name',email);
     try {
-        const collection = await dbService.getCollection('user')
-        const user = await collection.findOne({ username })
+        const collection = await dbService.getCollection('users')
+        const user = await collection.findOne({ email })
+        // console.log('find one',user);
         return user
     } catch (err) {
-        logger.error(`while finding user ${username}`, err)
+        logger.error(`while finding user ${email}`, err)
         throw err
     }
 }
 
 async function remove(userId) {
     try {
-        const collection = await dbService.getCollection('user')
+        const collection = await dbService.getCollection('users')
         await collection.deleteOne({ '_id': ObjectId(userId) })
     } catch (err) {
         logger.error(`cannot remove user ${userId}`, err)
@@ -71,11 +72,11 @@ async function update(user) {
         // peek only updatable fields!
         const userToSave = {
             _id: ObjectId(user._id),
-            username: user.username,
+            email: user.email,
             fullname: user.fullname,
-            score: user.score
+            
         }
-        const collection = await dbService.getCollection('user')
+        const collection = await dbService.getCollection('users')
         await collection.updateOne({ '_id': userToSave._id }, { $set: userToSave })
         return userToSave;
     } catch (err) {
@@ -86,15 +87,16 @@ async function update(user) {
 
 async function add(user) {
     try {
+        console.log('user');
         // peek only updatable fields!
         const userToAdd = {
-            username: user.username,
+            email: user.email,
             password: user.password,
             fullname: user.fullname,
+            boardsIds: user.boardsIds,
             isAdmin:false,
-            score: user.score || 0
         }
-        const collection = await dbService.getCollection('user')
+        const collection = await dbService.getCollection('users')
         await collection.insertOne(userToAdd)
         return userToAdd
     } catch (err) {
@@ -109,7 +111,7 @@ function _buildCriteria(filterBy) {
         const txtCriteria = { $regex: filterBy.txt, $options: 'i' }
         criteria.$or = [
             {
-                username: txtCriteria
+                email: txtCriteria
             },
             {
                 fullname: txtCriteria

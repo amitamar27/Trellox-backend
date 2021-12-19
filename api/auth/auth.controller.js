@@ -3,12 +3,12 @@ const logger = require('../../services/logger.service')
 
 async function login(req, res) {
     console.log('req',req.body);
-    const { username, password } = req.body
-    console.log('username',username);
+    const { email, password } = req.body
+    console.log('email',email);
     console.log('password',password);
     console.log('req.body',req.body);
     try {
-        const user = await authService.login(username, password)
+        const user = await authService.login(email, password)
         req.session.user = user
         res.json(user)
     } catch (err) {
@@ -19,16 +19,17 @@ async function login(req, res) {
 
 async function signup(req, res) {
     try {
-        const { username, password, fullname } = req.body
         console.log('req.body',req.body);
-        console.log('username, password, fullname',username, password, fullname);
+        const {fullname, email, password, boardsIds } = req.body
+        // 
+        console.log('email, password, fullname,boardsIds',email, password, fullname,boardsIds);
         // Never log passwords
-        // logger.debug(fullname + ', ' + username + ', ' + password)
-        const account = await authService.signup(username, password, fullname)
-        console.log('account',account);
+        // logger.debug(fullname + ', ' + email + ', ' + password)
+        const account = await authService.signup(email, password, fullname, boardsIds)
+        // console.log('account',account);
         logger.debug(`auth.route - new account created: ` + JSON.stringify(account))
-        console.log('username, password',username, password);
-        const user = await authService.login(username, password)
+        // console.log('email, password',email, password);
+        const user = await authService.login(email, password)
         console.log('user',user);
         req.session.user = user
         res.json(user)
