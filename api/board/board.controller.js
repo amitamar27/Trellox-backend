@@ -7,16 +7,13 @@ async function getBoards(req, res) {
     try {
         
         const filterBy = req.query
-        console.log('getBoards',filterBy);
         const boards = await boardService.query(filterBy)
-        console.log('boards',{boards});
         res.send(boards)
     } catch (err) {
         logger.error('Cannot get boards', err)
         res.status(500).send({ err: 'Failed to get boards' })
     }
 }
-
 
 
 async function getBoard(req, res) {
