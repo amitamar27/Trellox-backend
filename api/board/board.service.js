@@ -6,7 +6,7 @@ const logger = require('../../services/logger.service')
 async function query(filterBy = {}) {
     try {
         const criteria = _buildCriteria(filterBy)
-        console.log('criteria',criteria);
+        // console.log('criteria',criteria);
         const collection = await dbService.getCollection('boards')
         const boards = await collection.find(criteria).toArray()
         return boards
