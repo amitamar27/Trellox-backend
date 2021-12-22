@@ -6,7 +6,6 @@ const logger = require('../../services/logger.service')
 async function query(filterBy = {}) {
     try {
         const criteria = _buildCriteria(filterBy)
-        // console.log('criteria',criteria);
         const collection = await dbService.getCollection('boards')
         const boards = await collection.find(criteria).toArray()
         return boards
@@ -56,10 +55,6 @@ async function update({board}) {
 
 async function add(board) {
     try {
-        // board.createdAt = Date.now()
-        // console.log('board service',board);
-        // console.log('board labels',board.labels);
-        // if (board.isStared === undefined) board.isStared = false
         const collection = await dbService.getCollection('boards')
         await collection.insertOne(board)
         return board
@@ -75,60 +70,12 @@ function _buildCriteria(filterBy) {
     return criteria
 }
 
-async function save(board) {
-    // console.log('saving...',board);
-    const { title, createdBy, style, labels, members, groups, activities,covers } = board
-    // console.log('covers',covers);
-    let savedBoard
-    console.log('board._id',board._id);
-    if (board._id) {
-       try {
-          savedBoard = {
-             _id: ObjectId(board._id),
-             title,
-             createdBy,
-             style,
-             labels,
-             members,
-             groups,
-             activities,
-             covers,
-          }
-          const collection = await dbService.getCollection('boards')
-          await collection.updateOne({ _id: savedBoard._id }, { $set: savedBoard })
-          return savedBoard
-       } catch (err) {
-          logger.error('cannot update board', err)
-          throw err
-       }
-    } else {
-       try {
-           console.log('else!!!!!!!!!!!!');
-          savedBoard = {
-             createdAt: ObjectId().getTimestamp(),
-             title,
-             createdBy,
-             style,
-             labels,
-             members: [createdBy],
-             groups,
-             activities
-          }
-          const collection = await dbService.getCollection('boards')
-          await collection.insertOne(savedBoard)
-          return savedBoard
-       } catch (err) {
-          logger.error('cannot add board', err)
-          throw err
-       }
-    }
- }
+
 module.exports = {
     query,
     getById,
     remove,
     update,
     add,
-    save
-    // addMsg
+
 }

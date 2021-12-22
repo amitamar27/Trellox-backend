@@ -8,22 +8,10 @@ const logger = require('../../services/logger.service')
 
 // import bcrypt from 'bycrypt'
 async function login(email, password) {
-    console.log('email',email);
     logger.debug(`auth.service - login with email: ${email}`)
-
     const user = await userService.getByEmail(email)
-    console.log('user-login',user);
-    console.log('password',password);
-    
-    // || user.password !==password
     if (!user ) return Promise.reject('Invalid email or password user')
-    // TODO: un-comment for real login
-    // console.log('password',password);
-    // const hash  = await generateHash(password)
-    // console.log('hash',hash);
     const match = await bcrypt.compare(password, user.password)
-    // const m = await bcrypt
-    console.log('match',match);
     if (!match) return Promise.reject('Invalid email or password pass')
 
     delete user.password

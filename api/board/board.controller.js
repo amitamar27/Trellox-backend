@@ -28,7 +28,7 @@ async function getBoard(req, res) {
 
 async function deleteBoard(req, res) {
     try {
-        await boardService.remove(req.params.boardId)
+        await boardService.remove(req.params.id)
         res.send({ msg: 'Deleted successfully' })
     } catch (err) {
         logger.error('Failed to delete board', err)
@@ -40,8 +40,6 @@ async function updateBoard(req, res) {
     try {
         const board = req.body
         const savedBoard = await boardService.update(board)
-        // console.log('savedBoard',savedBoard);
-        // socketService.broadcast({ type: 'board-updated', data: board._id, room: board._id })
         res.send(savedBoard)
     } catch (err) {
         logger.error('Failed to update board', err)
@@ -52,12 +50,9 @@ async function updateBoard(req, res) {
 async function addBoard(req, res) {
     try {
         var {board} = req.body
-        // console.log(board);
         board = await boardService.add(board)
-        // socketService.broadcast({type: 'board-added', data: board})
         res.send(board)
     } catch (err) {
-        console.log(err)
         logger.error('Failed to add board', err)
         res.status(500).send({ err: 'Failed to add board' })
     }

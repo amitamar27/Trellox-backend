@@ -16,7 +16,6 @@ function doLog(level, ...args) {
     const strs = args.map(arg => (typeof arg === 'string') ? arg : JSON.stringify(arg))
     var line = strs.join(' | ')
     line = `${getTime()} - ${level} - ${line}\n`
-    console.log(line)
     fs.appendFileSync('./logs/backend.log', line)
 }
 
