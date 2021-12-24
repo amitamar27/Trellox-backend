@@ -31,7 +31,7 @@ if (process.env.NODE_ENV === 'production') {
     // Configuring CORS
     const corsOptions = {
         // Make sure origin contains the url your frontend is running on
-        origin: ['http://127.0.0.1:8080', 'http://localhost:8080','http://localhost:8081','http://localhost:8082', 'http://127.0.0.1:3000', 'http://localhost:3000'],
+        origin: ['http://127.0.0.1:8080', 'http://localhost:8080','http://localhost:8081','http://localhost:8082', 'http://127.0.0.1:3035', 'http://localhost:3035'],
         credentials: true
     }
     app.use(cors(corsOptions))
@@ -52,9 +52,6 @@ app.use('/api/user', userRoutes)
 app.use('/api/board', boardRoutes)
 connectSockets(http, session)
 
-// Make every server-side-route to match the index.html
-// so when requesting http://localhost:3030/index.html/toy/123 it will still respond with
-// our SPA (single page app) (the index.html file) and allow vue-router to take it from there
 app.get('/**', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'))
 })
