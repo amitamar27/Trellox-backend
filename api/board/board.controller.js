@@ -38,8 +38,8 @@ async function deleteBoard(req, res) {
 
 async function updateBoard(req, res) {
     try {
-        if(board._id === '61b5232979d1b61989d421d9' || board.createdBy._id === 'IbVtx') return
         const board = req.body
+        if(board._id === '61b5232979d1b61989d421d9' || board.createdBy._id === 'IbVtx') return
         const savedBoard = await boardService.update(board)
         res.send(savedBoard)
     } catch (err) {
