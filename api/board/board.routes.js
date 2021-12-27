@@ -11,7 +11,7 @@ router.get('/:boardId', getBoard)
 
 router.put('/', updateBoard)
 // requireAuth,
-router.post('/', requireAuth, addBoard)
+router.post('/', addBoard)
 // requireAuth,
 router.delete('/:id',  deleteBoard)
 // requireAuth,
