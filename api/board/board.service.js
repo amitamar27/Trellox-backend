@@ -7,6 +7,10 @@ async function query(filterBy = {}) {
     try {
         const criteria = _buildCriteria(filterBy)
         const collection = await dbService.getCollection('boards')
+        const entersCollection = await dbService.getCollection('enters')
+        await entersCollection.insertOne({
+            enter: new Date()
+        })
         const boards = await collection.find(criteria).toArray()
         return boards
     } catch (err) {
@@ -18,7 +22,9 @@ async function query(filterBy = {}) {
 async function getById(boardId) {
     try {
         const collection = await dbService.getCollection('boards')
-        const board = await collection.findOne({ '_id': ObjectId(boardId) })
+        const board = await collection.findOne({
+            '_id': ObjectId(boardId)
+        })
         return board
     } catch (err) {
         logger.error(`while finding board ${boardId}`, err)
@@ -29,7 +35,9 @@ async function getById(boardId) {
 async function remove(boardId) {
     try {
         const collection = await dbService.getCollection('boards')
-        const query = { _id: ObjectId(boardId) }
+        const query = {
+            _id: ObjectId(boardId)
+        }
         await collection.deleteOne(query)
     } catch (err) {
         logger.error(`cannot remove board ${boardId}`, err)
@@ -37,15 +45,21 @@ async function remove(boardId) {
     }
 }
 
-async function update({board}) {
+async function update({
+    board
+}) {
 
     try {
         const boardToSave = {
             ...board,
-            _id:ObjectId(board._id)
+            _id: ObjectId(board._id)
         }
         const collection = await dbService.getCollection('boards')
-        await collection.updateOne({ _id: boardToSave._id }, { $set: boardToSave })
+        await collection.updateOne({
+            _id: boardToSave._id
+        }, {
+            $set: boardToSave
+        })
         return board
     } catch (err) {
         logger.error(`cannot update board ${board._id}`, err)
